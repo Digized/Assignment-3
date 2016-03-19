@@ -211,5 +211,4 @@ public class GameModel implements Cloneable {
         return gmodel;
     }
 
-
 }
