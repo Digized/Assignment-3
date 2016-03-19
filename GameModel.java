@@ -207,7 +207,8 @@ public class GameModel implements Cloneable {
         super();
         GameModel gmodel=new GameModel(sizeOfGame);
         gmodel.currentDot=new getCurrentDot();
-        gmodel.model=new getModel();
+        gmodel.model=new int[sizeOfGame][sizeOfGame];
+        gmodel.model=getModel();
         return gmodel;
     }
 
