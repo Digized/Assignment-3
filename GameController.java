@@ -25,6 +25,9 @@ public class GameController implements ActionListener {
      * Reference to the model of the game
      */
     private GameModel gameModel;
+    
+    Stack<GameModel> undoos;
+    Stack<GameModel> redoos;
  
     
     /**
@@ -37,6 +40,9 @@ public class GameController implements ActionListener {
     public GameController(int size) {
         gameModel = new GameModel(size);
         gameView = new GameView(gameModel, this);
+        undoos=new LinkedStack<GameModel>();
+        undoos.push(gameModel.clone());
+        redoos=new LinkedStack<GameModel>();
         gameView.update();
     }
 
@@ -75,7 +81,12 @@ public class GameController implements ActionListener {
                  System.exit(0);
             } else if (clicked.getText().equals("Reset")){
                 reset();
-            } 
+            } else if(clicked.getText().equals("Undo")){
+                undo(clicked);
+            }
+            else if(clicked.getText().equals("Redo")){
+                redo(clicked);
+            }
         } 
     }
 
@@ -132,6 +143,7 @@ public class GameController implements ActionListener {
             }
             else{
                 gameModel.setCurrentDot(direction.getX(), direction.getY());
+                undoos.push(gameModel.clone());
                 gameView.update();
             }
         }
@@ -254,6 +266,29 @@ public class GameController implements ActionListener {
         }
         return list;
     }
-
+    
+    private void undo(JButton clicked){
+        try{
+            GameModel tmp=undoos.pop();
+            redoos.push(tmp);
+            gameModel=tmp;
+        }
+        catch(EmptyStackException){
+            clicked.setEnabled(false);
+        }
+        gameView.update();
+    }
+    
+    private void redo(JButton clicked){
+        try{
+            GameModel tmp=redoos.pop();
+            undoos.push(tmp);
+            gameModel=tmp;
+        }
+        catch(EmptyStackException){
+            clicked.setEnabled(false);
+        }
+        gameView.update();
+    }
 
 }
