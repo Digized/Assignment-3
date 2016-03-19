@@ -16,7 +16,7 @@ import java.util.Random;
  *
  * @author Guy-Vincent Jourdan, University of Ottawa
  */
-public class GameModel {
+public class GameModel implements Cloneable {
 
 
     /**
@@ -203,6 +203,13 @@ public class GameModel {
         return numberOfSteps;
     }
 
+    public GameModel clone(){
+        super();
+        GameModel gmodel=new GameModel(sizeOfGame);
+        gmodel.currentDot=new getCurrentDot();
+        gmodel.model=new getModel();
+        return gmodel;
+    }
 
 
 }
