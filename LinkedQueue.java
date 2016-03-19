@@ -15,10 +15,16 @@ public class LinkedQueue<E> implements Queue<E> {
     private Elem<E> rear;
 
     public E peek() {
+        if (isEmpty()){
+            throw new EmptyQueueException();
+        }
         return front.value;
     }
 
     public void enqueue( E o ) {
+        if(o==null){
+            throw new NullPointerException();
+        }
         Elem<E> newElem;
         newElem = new Elem<E>( o, null );
 
@@ -31,6 +37,9 @@ public class LinkedQueue<E> implements Queue<E> {
     }
 
     public E dequeue() {
+        if (isEmpty()){
+            throw new EmptyQueueException();
+        }
         E result = front.value;
         if ( front != null & front.next == null ) {
             front = rear = null;

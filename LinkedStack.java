@@ -21,15 +21,24 @@ public class LinkedStack<E> implements Stack<E>{
     }
 
     public void push( E info ) {
+        if (info==null){
+            throw new NullPointerException();
+        }
         top = new Elem<E>( info, top );
     }
 
     public E peek() {
+        if(isEmpty()){
+            throw new EmptyStackException();
+        }
         return top.info;
     }
 
     public E pop() {
-
+        
+        if(isEmpty()){
+            throw new EmptyStackException();
+        }
         
         E savedInfo = top.info;
 
