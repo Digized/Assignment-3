@@ -273,7 +273,7 @@ public class GameController implements ActionListener {
             redoos.push(tmp);
             gameModel=tmp;
         }
-        catch(EmptyStackException){
+        catch(EmptyStackException e){
             clicked.setEnabled(false);
         }
         gameView.update();
@@ -285,7 +285,7 @@ public class GameController implements ActionListener {
             undoos.push(tmp);
             gameModel=tmp;
         }
-        catch(EmptyStackException){
+        catch(EmptyStackException e){
             clicked.setEnabled(false);
         }
         gameView.update();
