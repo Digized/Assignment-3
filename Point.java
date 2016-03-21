@@ -5,7 +5,7 @@
  * @author Guy-Vincent Jourdan, University of Ottawa
  */
 
-public class Point {
+public class Point implements Cloneable {
 
     /**
      * The coordinate of this point.
@@ -62,6 +62,10 @@ public class Point {
     public void reset(int x, int y){
         this.x = x;
         this.y = y;
+    }
+    
+    public Point clone() throws CloneNotSupportedException{
+        return (Point) super.clone();
     }
 
  }

@@ -43,7 +43,7 @@ public class GameView extends JFrame {
     	add(board, BorderLayout.CENTER);
 
         JButton buttonUndo=new JButton("Undo");
-        buttonUndo.setEnabled(false);
+        //buttonUndo.setEnabled(false);
         buttonUndo.addActionListener(gameController);
         
         JButton buttonReset = new JButton("Reset");
@@ -55,7 +55,7 @@ public class GameView extends JFrame {
         buttonExit.addActionListener(gameController);
         
         JButton buttonRedo=new JButton("Redo");
-        buttonRedo.setEnabled(false);
+        //buttonRedo.setEnabled(false);
         buttonRedo.addActionListener(gameController);
 
     	JPanel control = new JPanel();

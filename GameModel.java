@@ -72,8 +72,7 @@ public class GameModel implements Cloneable {
 
         reset();
     }
-
-
+    
     /**
      * Resets the model to (re)start a game. The previous game (if there is one)
      * is cleared up . The blue dot is positioned as per instructions, and each 
@@ -203,14 +202,38 @@ public class GameModel implements Cloneable {
         return numberOfSteps;
     }
 
-    public GameModel clone(){
-        super();
-        GameModel gmodel=new GameModel(sizeOfGame);
-        gmodel.currentDot=new Point();
-        gmodel.currentDot= getCurrentDot();
-        gmodel.model=new int[sizeOfGame][sizeOfGame];
-        gmodel.model=getModel();
-        return gmodel;
+    public GameModel clone() throws CloneNotSupportedException{
+        GameModel gm=(GameModel) super.clone();
+        gm.model=ArraySeperator(getModel());
+        gm.currentDot=currentDot.clone();
+        for(int i=0;i<gm.getSize();i++){
+              for(int j=0;j<gm.getSize();j++){
+                System.out.print(gm.getModel()[i][j]+" ");
+            }  
+            System.out.println();
+            }    
+             System.out.println();
+        return gm;
+    }
+    
+    private int[][] ArraySeperator(int[][] n){
+        int[][] h=new int[n.length][n.length];
+        for(int i=0;i<n.length;i++){
+            for (int j=0;j<n.length;j++){
+                h[i][j]=n[i][j];
+            }
+        }
+       
+        return h;
+    }
+    
+    public void restore(GameModel gm){
+        for(int i=0;i<getSize();i++){
+            for (int j=0;j<getSize();j++){
+                model[i][j]=gm.getModel()[i][j];
+            }
+        }
+        currentDot=gm.getCurrentDot();
     }
 
 }

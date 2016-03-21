@@ -26,8 +26,8 @@ public class GameController implements ActionListener {
      */
     private GameModel gameModel;
     
-    Stack<GameModel> undoos;
-    Stack<GameModel> redoos;
+    private Stack<GameModel> undoos;
+    private Stack<GameModel> redoos;
  
     
     /**
@@ -41,7 +41,7 @@ public class GameController implements ActionListener {
         gameModel = new GameModel(size);
         gameView = new GameView(gameModel, this);
         undoos=new LinkedStack<GameModel>();
-        undoos.push(gameModel.clone());
+        undoos.push(gameModel);
         redoos=new LinkedStack<GameModel>();
         gameView.update();
     }
@@ -73,6 +73,11 @@ public class GameController implements ActionListener {
                     GameModel.AVAILABLE){
                 gameModel.select(clicked.getColumn(),clicked.getRow());
                 oneStep();
+                try{
+                    undoos.push(gameModel.clone());
+                }catch(CloneNotSupportedException l){
+                    
+                }
             }
         } else if (e.getSource() instanceof JButton) {
             JButton clicked = (JButton)(e.getSource());
@@ -83,9 +88,11 @@ public class GameController implements ActionListener {
                 reset();
             } else if(clicked.getText().equals("Undo")){
                 undo(clicked);
+                gameView.update();
             }
             else if(clicked.getText().equals("Redo")){
-                redo(clicked);
+               redo(clicked);
+               gameView.update();
             }
         } 
     }
@@ -142,8 +149,8 @@ public class GameController implements ActionListener {
                 }
             }
             else{
+               
                 gameModel.setCurrentDot(direction.getX(), direction.getY());
-                undoos.push(gameModel.clone());
                 gameView.update();
             }
         }
@@ -267,28 +274,34 @@ public class GameController implements ActionListener {
         return list;
     }
     
-    private void undo(JButton clicked){
+    private void undo(JButton clicked) {
         try{
-            GameModel tmp=undoos.pop();
-            redoos.push(tmp);
-            gameModel=tmp;
+            GameModel gmodel=undoos.pop();
+            redoos.push(gmodel);
+            gameModel.restore(gmodel);      
         }
         catch(EmptyStackException e){
-            clicked.setEnabled(false);
+            System.out.println("!-!-!");
         }
-        gameView.update();
+        catch(Exception e){
+            //clicked.setEnabled(false);
+             System.out.println("!!!");
+        }        
     }
     
-    private void redo(JButton clicked){
+   private void redo(JButton clicked) {
         try{
-            GameModel tmp=redoos.pop();
-            undoos.push(tmp);
-            gameModel=tmp;
+            GameModel gmodel=redoos.pop();
+            undoos.push(gmodel);
+            gameModel.restore(gmodel);      
         }
         catch(EmptyStackException e){
-            clicked.setEnabled(false);
+            System.out.println("!-!-!");
         }
-        gameView.update();
+        catch(Exception e){
+            //clicked.setEnabled(false);
+             System.out.println("!!!");
+        }        
     }
 
 }
