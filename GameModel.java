@@ -16,7 +16,7 @@ import java.util.Random;
  *
  * @author Guy-Vincent Jourdan, University of Ottawa
  */
-public class GameModel implements Cloneable {
+public class GameModel {
 
 
     /**
@@ -202,6 +202,7 @@ public class GameModel implements Cloneable {
         return numberOfSteps;
     }
 
+<<<<<<< HEAD
     public GameModel clone() throws CloneNotSupportedException{
         GameModel gm=(GameModel) super.clone();
         gm.model=ArraySeperator(getModel());
@@ -235,5 +236,8 @@ public class GameModel implements Cloneable {
         }
         currentDot=gm.getCurrentDot();
     }
+=======
+
+>>>>>>> parent of c3f6a75... Finished 2
 
 }

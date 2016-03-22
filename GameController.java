@@ -293,7 +293,7 @@ public class GameController implements ActionListener {
         try{
             GameModel gmodel=redoos.pop();
             undoos.push(gmodel);
-            gameModel.restore(gmodel);      
+            gameModel.restore(gmodel);   
         }
         catch(EmptyStackException e){
             clicked.setEnabled(false);
