@@ -41,9 +41,9 @@ public class GameController implements ActionListener {
         gameModel = new GameModel(size);
         gameView = new GameView(gameModel, this);
         undoos=new LinkedStack<GameModel>();
-        undoos.push(gameModel);
         redoos=new LinkedStack<GameModel>();
         gameView.update();
+        System.out.println(undoos.peek());
     }
 
 
@@ -65,19 +65,19 @@ public class GameController implements ActionListener {
      */
 
     public void actionPerformed(ActionEvent e) {
-        
         if (e.getSource() instanceof DotButton) {
             DotButton clicked = (DotButton)(e.getSource());
 
         	if (gameModel.getCurrentStatus(clicked.getColumn(),clicked.getRow()) ==
                     GameModel.AVAILABLE){
-                gameModel.select(clicked.getColumn(),clicked.getRow());
-                oneStep();
                 try{
                     undoos.push(gameModel.clone());
                 }catch(CloneNotSupportedException l){
                     
                 }
+                gameModel.select(clicked.getColumn(),clicked.getRow());
+                oneStep();
+                
             }
         } else if (e.getSource() instanceof JButton) {
             JButton clicked = (JButton)(e.getSource());
@@ -226,7 +226,7 @@ public class GameController implements ActionListener {
      * @param p
      *            the point to check
      *
-     * @return true iff p is on the border of the board
+     * @return true  p is on the border of the board
      */
      
     private boolean isOnBorder(Point p){
@@ -281,10 +281,10 @@ public class GameController implements ActionListener {
             gameModel.restore(gmodel);      
         }
         catch(EmptyStackException e){
-            System.out.println("!-!-!");
+            clicked.setEnabled(false);
         }
         catch(Exception e){
-            //clicked.setEnabled(false);
+            
              System.out.println("!!!");
         }        
     }
@@ -296,10 +296,10 @@ public class GameController implements ActionListener {
             gameModel.restore(gmodel);      
         }
         catch(EmptyStackException e){
-            System.out.println("!-!-!");
+            clicked.setEnabled(false);
         }
         catch(Exception e){
-            //clicked.setEnabled(false);
+            
              System.out.println("!!!");
         }        
     }
