@@ -21,6 +21,7 @@ public class GameView extends JFrame {
      */
     private BoardView board;
     private GameModel gameModel;
+    private GameController gameController;
  
   
     /**
@@ -37,13 +38,13 @@ public class GameView extends JFrame {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     	setBackground(Color.WHITE);
-
+        this.gameController=gameController;
         gameModel = model;
     	board = new BoardView(model, gameController);
     	add(board, BorderLayout.CENTER);
 
         JButton buttonUndo=new JButton("Undo");
-        //buttonUndo.setEnabled(false);
+        buttonUndo.setEnabled(false);
         buttonUndo.addActionListener(gameController);
         
         JButton buttonReset = new JButton("Reset");
@@ -55,7 +56,7 @@ public class GameView extends JFrame {
         buttonExit.addActionListener(gameController);
         
         JButton buttonRedo=new JButton("Redo");
-        //buttonRedo.setEnabled(false);
+       
         buttonRedo.addActionListener(gameController);
 
     	JPanel control = new JPanel();
@@ -65,6 +66,8 @@ public class GameView extends JFrame {
         control.add(buttonExit);
         control.add(buttonRedo);
     	add(control, BorderLayout.SOUTH);
+        
+         buttonRedo.setEnabled(false);
 
     	pack();
     	setResizable(false);

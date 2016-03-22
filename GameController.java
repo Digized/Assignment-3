@@ -41,7 +41,6 @@ public class GameController implements ActionListener {
         gameModel = new GameModel(size);
         gameView = new GameView(gameModel, this);
         undoos=new LinkedStack<GameModel>();
-        undoos.push(gameModel);
         redoos=new LinkedStack<GameModel>();
         gameView.update();
     }
@@ -71,22 +70,23 @@ public class GameController implements ActionListener {
 
         	if (gameModel.getCurrentStatus(clicked.getColumn(),clicked.getRow()) ==
                     GameModel.AVAILABLE){
-                gameModel.select(clicked.getColumn(),clicked.getRow());
-                oneStep();
                 try{
                     undoos.push(gameModel.clone());
                 }catch(CloneNotSupportedException l){
-                    
+                    System.out.println(":");
                 }
+                gameModel.select(clicked.getColumn(),clicked.getRow());
+                oneStep();
             }
         } else if (e.getSource() instanceof JButton) {
             JButton clicked = (JButton)(e.getSource());
-
+            
             if (clicked.getText().equals("Quit")) {
                  System.exit(0);
             } else if (clicked.getText().equals("Reset")){
                 reset();
             } else if(clicked.getText().equals("Undo")){
+                
                 undo(clicked);
                 gameView.update();
             }
@@ -278,28 +278,25 @@ public class GameController implements ActionListener {
         try{
             GameModel gmodel=undoos.pop();
             redoos.push(gmodel);
-            gameModel.restore(gmodel);      
+            gameModel.restore(gmodel); 
+             
         }
         catch(EmptyStackException e){
-            System.out.println("!-!-!");
-        }
-        catch(Exception e){
-            //clicked.setEnabled(false);
-             System.out.println("!!!");
-        }        
+            clicked.setEnabled(false);
+        }     
     }
     
    private void redo(JButton clicked) {
         try{
             GameModel gmodel=redoos.pop();
             undoos.push(gmodel);
-            gameModel.restore(gmodel);   
+            gameModel.restore(gmodel);
         }
         catch(EmptyStackException e){
-            System.out.println("!-!-!");
+            clicked.setEnabled(false);
         }
         catch(Exception e){
-            //clicked.setEnabled(false);
+            
              System.out.println("!!!");
         }        
     }
