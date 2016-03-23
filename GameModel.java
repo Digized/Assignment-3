@@ -206,21 +206,22 @@ public class GameModel implements Cloneable  {
         GameModel gm=(GameModel) super.clone();
         gm.model=ArraySeperator(getModel());
         gm.currentDot=currentDot.clone();
-        for(int i=0;i<gm.getSize();i++){
+        /*for(int i=0;i<gm.getSize();i++){
               for(int j=0;j<gm.getSize();j++){
-                System.out.print(gm.getModel()[i][j]+" ");
+                System.out.print(gm.getModel()[j][i]+" ");
             }  
             System.out.println();
             }    
-             System.out.println();
+             System.out.println();*/
         return gm;
     }
     
     private int[][] ArraySeperator(int[][] n){
         int[][] h=new int[n.length][n.length];
         for(int i=0;i<n.length;i++){
-            for (int j=0;j<n.length;j++){
-                h[i][j]=n[i][j];
+            for(int j=0;j<n.length;j++){
+            int k=n[i][j];
+            h[i][j]=k;
             }
         }
        

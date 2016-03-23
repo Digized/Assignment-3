@@ -26,10 +26,10 @@ public class GameController implements ActionListener {
      */
     private GameModel gameModel;
     
-    private Stack<GameModel> undoos;
-    private Stack<GameModel> redoos;
- 
+    protected Stack<GameModel> undoos;
+    protected Stack<GameModel> redoos;
     
+    private int undoing;
     /**
      * Constructor used for initializing the controller. It creates the game's view 
      * and the game's model instances
@@ -41,8 +41,14 @@ public class GameController implements ActionListener {
         gameModel = new GameModel(size);
         gameView = new GameView(gameModel, this);
         undoos=new LinkedStack<GameModel>();
+        
         redoos=new LinkedStack<GameModel>();
         gameView.update();
+        try{
+            undoos.push(gameModel.clone());
+            clearRedo();
+        }catch(CloneNotSupportedException l){
+        }
     }
 
 
@@ -52,6 +58,10 @@ public class GameController implements ActionListener {
      */
     public void reset(){
         gameModel.reset();
+        while(!undoos.isEmpty()){
+            undoos.pop();
+        }
+        clearRedo();
         gameView.update();
     }
 
@@ -70,13 +80,16 @@ public class GameController implements ActionListener {
 
         	if (gameModel.getCurrentStatus(clicked.getColumn(),clicked.getRow()) ==
                     GameModel.AVAILABLE){
-                try{
-                    undoos.push(gameModel.clone());
-                }catch(CloneNotSupportedException l){
-                    System.out.println(":");
-                }
                 gameModel.select(clicked.getColumn(),clicked.getRow());
                 oneStep();
+                try{
+                    
+                    clearRedo();
+                    undoos.push(gameModel.clone());
+                    stackVisualizer();
+                }catch(CloneNotSupportedException l){
+                }
+                gameView.update();
             }
         } else if (e.getSource() instanceof JButton) {
             JButton clicked = (JButton)(e.getSource());
@@ -275,30 +288,68 @@ public class GameController implements ActionListener {
     }
     
     private void undo(JButton clicked) {
+        
         try{
+            
             GameModel gmodel=undoos.pop();
             redoos.push(gmodel);
-            gameModel.restore(gmodel); 
-             
-        }
-        catch(EmptyStackException e){
-            clicked.setEnabled(false);
-        }     
-    }
-    
-   private void redo(JButton clicked) {
-        try{
-            GameModel gmodel=redoos.pop();
-            undoos.push(gmodel);
+            if(redoos.isEmpty()){
+                redoos.push(undoos.pop());
+            }     
             gameModel.restore(gmodel);
         }
         catch(EmptyStackException e){
-            clicked.setEnabled(false);
+           System.out.println("!!!");
         }
-        catch(Exception e){
-            
-             System.out.println("!!!");
-        }        
+         stackVisualizer();
     }
+    
+   private void redo(JButton clicked) {
+       
+        try{
+            GameModel gmodel=redoos.pop();
+            undoos.push(gmodel);            
+            gameModel.restore(gmodel);
+        }
+        catch(EmptyStackException e){
+        }
+       /* catch(CloneNotSupportedException e){
+            
+        }  */
+        stackVisualizer();
+    }
+    
+    private void clearRedo(){
+        while(!redoos.isEmpty()){
+            redoos.pop();
+        }
+    }
+    
+    private void stackVisualizer(){
+        Stack<GameModel> uVis=new LinkedStack<GameModel>();
+        System.out.println("==========UNDO=========");
+        while(!undoos.isEmpty()){
+            uVis.push(undoos.pop());
+        }        
+        while(!uVis.isEmpty()){
+            GameModel gm=uVis.pop();
+            undoos.push(gm);
+            System.out.println("||"+gm+"||");
+        }
+        System.out.println("=======================\n\n\n");
+        Stack<GameModel> rVis=new LinkedStack<GameModel>();
+        System.out.println("==========REDO=========");
+        while(!redoos.isEmpty()){
+            rVis.push(redoos.pop());
+        }        
+        while(!rVis.isEmpty()){
+            GameModel gm=rVis.pop();
+            redoos.push(gm);
+            System.out.println("||"+gm+"||");
+        }
+        System.out.println("======================");
+        
+        System.out.println();
+        }
 
 }

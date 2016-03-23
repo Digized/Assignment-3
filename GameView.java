@@ -22,6 +22,8 @@ public class GameView extends JFrame {
     private BoardView board;
     private GameModel gameModel;
     private GameController gameController;
+    
+    private JButton buttonUndo,buttonRedo;
  
   
     /**
@@ -43,7 +45,7 @@ public class GameView extends JFrame {
     	board = new BoardView(model, gameController);
     	add(board, BorderLayout.CENTER);
 
-        JButton buttonUndo=new JButton("Undo");
+         buttonUndo=new JButton("Undo");
         buttonUndo.setEnabled(false);
         buttonUndo.addActionListener(gameController);
         
@@ -55,8 +57,8 @@ public class GameView extends JFrame {
         buttonExit.setFocusPainted(false);
         buttonExit.addActionListener(gameController);
         
-        JButton buttonRedo=new JButton("Redo");
-       
+        buttonRedo=new JButton("Redo");
+        buttonRedo.setEnabled(false);
         buttonRedo.addActionListener(gameController);
 
     	JPanel control = new JPanel();
@@ -67,7 +69,7 @@ public class GameView extends JFrame {
         control.add(buttonRedo);
     	add(control, BorderLayout.SOUTH);
         
-         buttonRedo.setEnabled(false);
+         
 
     	pack();
     	setResizable(false);
@@ -78,6 +80,18 @@ public class GameView extends JFrame {
 
     public void update(){
         board.update();
+        try{
+            gameController.undoos.peek();
+            buttonUndo.setEnabled(true);
+        }catch(EmptyStackException e){
+            buttonUndo.setEnabled(false);
+        }
+        try{
+            gameController.redoos.peek();
+            buttonRedo.setEnabled(true);
+        }catch(EmptyStackException e){
+            buttonRedo.setEnabled(false);
+        }
   
     }
 
