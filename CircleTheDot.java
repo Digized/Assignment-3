@@ -1,5 +1,5 @@
 
-
+import java.io.*;
 /**
  * The class <b>CircleTheDot</b> launches the game
  *
@@ -29,7 +29,7 @@ public class CircleTheDot {
                 System.out.println("Invalide argument, using default...");
             }
         }
-        GameController game = new GameController(size);
+         GameController game = new GameController(size);
     }
 
 

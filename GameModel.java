@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.io.*;
 
 /**
  * The class <b>GameModel</b> holds the model, the state of the systems. 
@@ -16,7 +17,7 @@ import java.util.Random;
  *
  * @author Guy-Vincent Jourdan, University of Ottawa
  */
-public class GameModel implements Cloneable  {
+public class GameModel implements Cloneable,Serializable  {
 
 
     /**

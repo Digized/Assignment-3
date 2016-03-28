@@ -1,6 +1,7 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
+import java.io.*;
 
 import javax.swing.*;
 
@@ -29,7 +30,6 @@ public class GameController implements ActionListener {
     protected Stack<GameModel> undoos;
     protected Stack<GameModel> redoos;
     
-    private int state;
     /**
      * Constructor used for initializing the controller. It creates the game's view 
      * and the game's model instances
@@ -38,12 +38,18 @@ public class GameController implements ActionListener {
      *            the size of the board on which the game will be played
      */
     public GameController(int size) {
-        gameModel = new GameModel(size);
+        try{
+           ObjectInputStream in=new ObjectInputStream(new BufferedInputStream(new FileInputStream("savedGame.ser")));
+           GameModel gm=(GameModel)in.readObject();
+           gameModel=gm;
+           System.out.println("YOYOYOOYOYOOY");  
+        }catch(Exception e){
+           gameModel = new GameModel(size); 
+        }
         gameView = new GameView(gameModel, this);
         undoos=new LinkedStack<GameModel>();
         redoos=new LinkedStack<GameModel>();
         gameView.update();
-        state=0;
         try{
             undoos.push(gameModel.clone());
             clearRedo();
@@ -54,7 +60,7 @@ public class GameController implements ActionListener {
 
  
     /**
-     * resets the game
+     * resets the game, empties stacks
      */
     public void reset(){
         gameModel.reset();
@@ -80,8 +86,6 @@ public class GameController implements ActionListener {
 
         	if (gameModel.getCurrentStatus(clicked.getColumn(),clicked.getRow()) ==
                     GameModel.AVAILABLE){
-
-                state=0;
                 try{
                     
                     clearRedo();
@@ -97,6 +101,13 @@ public class GameController implements ActionListener {
             JButton clicked = (JButton)(e.getSource());
             
             if (clicked.getText().equals("Quit")) {
+                try{
+                    ObjectOutputStream out=new ObjectOutputStream(new FileOutputStream(new File("savedGame.ser")));
+                    out.writeObject(gameModel);
+                    out.close();
+                }catch(IOException io){
+                    
+                }
                  System.exit(0);
             } else if (clicked.getText().equals("Reset")){
                 reset();
