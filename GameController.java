@@ -80,8 +80,7 @@ public class GameController implements ActionListener {
 
         	if (gameModel.getCurrentStatus(clicked.getColumn(),clicked.getRow()) ==
                     GameModel.AVAILABLE){
-                gameModel.select(clicked.getColumn(),clicked.getRow());
-                oneStep();
+
                 state=0;
                 try{
                     
@@ -90,6 +89,8 @@ public class GameController implements ActionListener {
                     stackVisualizer();
                 }catch(CloneNotSupportedException l){
                 }
+                gameModel.select(clicked.getColumn(),clicked.getRow());
+                oneStep();
                 gameView.update();
             }
         } else if (e.getSource() instanceof JButton) {
@@ -289,23 +290,24 @@ public class GameController implements ActionListener {
     }
     
     private void undo() {
-        if (state==0){
-            System.out.println(state);
-            state=-1;
-            redoos.push(undoos.pop());
+        try{
+            redoos.push(gameModel.clone());
             gameModel.restore(undoos.pop());
-        }
-        else{
-            gameModel.restore(undoos.pop());
-            stackVisualizer();
+            gameView.update();
+        }catch(CloneNotSupportedException e){
+            
         }
     }
     
    private void redo() {
-        state=1;
-        undoos.push(redoos.pop());
+       try{
+        undoos.push(gameModel.clone());
         gameModel.restore(redoos.pop());
-        stackVisualizer();
+        gameView.update();
+       }catch(CloneNotSupportedException e){
+           
+       }
+       
     }
     
     private void clearRedo(){
