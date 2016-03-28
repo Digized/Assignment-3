@@ -29,7 +29,7 @@ public class GameController implements ActionListener {
     protected Stack<GameModel> undoos;
     protected Stack<GameModel> redoos;
     
-    private int undoing;
+    private int state;
     /**
      * Constructor used for initializing the controller. It creates the game's view 
      * and the game's model instances
@@ -41,9 +41,9 @@ public class GameController implements ActionListener {
         gameModel = new GameModel(size);
         gameView = new GameView(gameModel, this);
         undoos=new LinkedStack<GameModel>();
-        
         redoos=new LinkedStack<GameModel>();
         gameView.update();
+        state=0;
         try{
             undoos.push(gameModel.clone());
             clearRedo();
@@ -82,6 +82,7 @@ public class GameController implements ActionListener {
                     GameModel.AVAILABLE){
                 gameModel.select(clicked.getColumn(),clicked.getRow());
                 oneStep();
+                state=0;
                 try{
                     
                     clearRedo();
@@ -100,11 +101,11 @@ public class GameController implements ActionListener {
                 reset();
             } else if(clicked.getText().equals("Undo")){
                 
-                undo(clicked);
+                undo();
                 gameView.update();
             }
             else if(clicked.getText().equals("Redo")){
-               redo(clicked);
+               redo();
                gameView.update();
             }
         } 
@@ -287,35 +288,23 @@ public class GameController implements ActionListener {
         return list;
     }
     
-    private void undo(JButton clicked) {
-        
-        try{
-            
-            GameModel gmodel=undoos.pop();
-            redoos.push(gmodel);
-            if(redoos.isEmpty()){
-                redoos.push(undoos.pop());
-            }     
-            gameModel.restore(gmodel);
+    private void undo() {
+        if (state==0){
+            System.out.println(state);
+            state=-1;
+            redoos.push(undoos.pop());
+            gameModel.restore(undoos.pop());
         }
-        catch(EmptyStackException e){
-           System.out.println("!!!");
+        else{
+            gameModel.restore(undoos.pop());
+            stackVisualizer();
         }
-         stackVisualizer();
     }
     
-   private void redo(JButton clicked) {
-       
-        try{
-            GameModel gmodel=redoos.pop();
-            undoos.push(gmodel);            
-            gameModel.restore(gmodel);
-        }
-        catch(EmptyStackException e){
-        }
-       /* catch(CloneNotSupportedException e){
-            
-        }  */
+   private void redo() {
+        state=1;
+        undoos.push(redoos.pop());
+        gameModel.restore(redoos.pop());
         stackVisualizer();
     }
     
